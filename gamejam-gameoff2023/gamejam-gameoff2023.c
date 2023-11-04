@@ -9,6 +9,7 @@
 #include "core/maths/vector2.h"
 #include "core/maths/maths.h"
 #include "game/view.h"
+#include "core/clock.h"
 
 #ifdef DEBUG
 
@@ -23,11 +24,13 @@ int main()
 	bool isRunning = true;
 	App app;
 	Player player;
+	player.heading = 0;
 	World world;
 	world.player = &player;
-	Vector2 playerMapPos;
+	Clock clock;
 
 	Core_Setup(&app);
+	Clock_Init(&clock);
 
 #ifdef DEBUG
 	time_t t;
@@ -63,6 +66,8 @@ int main()
 	
 	SDL_Event e;
 	while (isRunning) {
+		Clock_Tick(&clock);
+
 		while (SDL_PollEvent(&e)) {
 			if (e.type == SDL_QUIT) {
 				isRunning = false;
@@ -72,7 +77,7 @@ int main()
 		//====================
 		// Update
 		//====================
-		Player_Update(&player);
+		Player_Update(&player, &clock);
 		World_Raycast(&world, &player);
 
 		//====================

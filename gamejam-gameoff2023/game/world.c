@@ -10,18 +10,12 @@ void World_Raycast(World* world, const Player* player) {
 	rayAngleIncrement *= DEG2RAD;
 
 	for (int rayIndex = 0; rayIndex < WINDOW_WIDTH; rayIndex++) {
-		bool hit = false;
 		int mapX = 0;
 		int mapY = 0;
 		Vector2 rayDirection = { cos((double)player->heading + rayAngle), sin((double)player->heading + rayAngle) };
 		Vector2 rayEndpoint = { player->position.x, player->position.y };
 
-		// Extend ray
 		for (int step = 0; step < RAY_LENGTH; step++) {
-			if (hit) {
-				break;
-			}
-
 			rayEndpoint.x += rayDirection.x;
 			rayEndpoint.y += rayDirection.y;
 			mapX = rayEndpoint.x / CELL_SIZE;
@@ -33,14 +27,18 @@ void World_Raycast(World* world, const Player* player) {
 			if (mapY > MAP_ROWS) mapY = MAP_ROWS - 1;
 
 			if (g_worldGameMap[mapY][mapX] == 1) {
-				hit = true;
+				break;
 			}
 		}
-		// end extend ray
+
 		rayAngle += rayAngleIncrement;
-		if (hit) {
-			World_SetHitDistance(world, player, &rayEndpoint, rayIndex, rayAngle);
-		}
+
+		/*
+		* Add ray hit regardless of whether hit occured or not, when 3D view
+		* is rendered a check is made to see if the ray endpoint's coords exist within the
+		* g_worldGameMap array.
+		*/
+		World_SetHitDistance(world, player, &rayEndpoint, rayIndex, rayAngle);
 	}
 }
 

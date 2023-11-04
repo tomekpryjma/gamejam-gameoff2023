@@ -16,7 +16,7 @@ endif()
 string(STRIP "${SDL2_LIBRARIES}" SDL2_LIBRARIES)
 
 # Add source to this project's executable.
-add_executable (gamejam-gameoff2023 "gamejam-gameoff2023.c"  "core/core.h" "core/core.c"   "game/globals.h" "core/maths/vector2.h" "core/maths/vector2.c" "core/maths/maths.h" "game/player.h" "game/player.c" "game/world.h" "game/world.c" "game/view.h" "game/view.c")
+add_executable (gamejam-gameoff2023 "gamejam-gameoff2023.c"  "core/core.h" "core/core.c"   "game/globals.h" "core/maths/vector2.h" "core/maths/vector2.c" "core/maths/maths.h" "game/player.h" "game/player.c" "game/world.h" "game/world.c" "game/view.h" "game/view.c" "core/clock.h" "core/clock.c")
 target_link_libraries(gamejam-gameoff2023 ${SDL2_LIBRARIES})
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)

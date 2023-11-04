@@ -4,27 +4,35 @@
 #include "SDL.h"
 
 
-void Player_Update(Player* player) {
-	int mx, my;
-	SDL_GetMouseState(&mx, &my);
-	player->mousePosition.x = mx;
-	player->mousePosition.y = my;
+void Player_Update(Player* player, const Clock* clock) {
+	int moveDirectionFB = 0;
+	int moveDirectionLR = 0;
+	int mRelX;
+	const double dT = clock->deltaTime;
+
+	SDL_GetRelativeMouseState(&mRelX, NULL);
+	player->heading += mRelX * DEG2RAD * PLAYER_LOOK_SPEED * dT;
 
 	Uint8* keyStates = SDL_GetKeyboardState(NULL);
 	if (keyStates[SDL_SCANCODE_W]) {
-		player->position.y -= 1;
+		moveDirectionFB = 1;
 	}
 	if (keyStates[SDL_SCANCODE_S]) {
-		player->position.y += 1;
+		moveDirectionFB = -1;
 	}
 	if (keyStates[SDL_SCANCODE_A]) {
-		player->position.x -= 1;
+		moveDirectionLR = -1;
 	}
 	if (keyStates[SDL_SCANCODE_D]) {
-		player->position.x += 1;
+		moveDirectionLR = 1;
 	}
 
-	Vector2 playerToMouseDist = Vector2_GetDistances(&player->position, &player->mousePosition);
-	Vector2 playerToMouseHeading = Vector2_Normalize(&playerToMouseDist);
-	player->heading = atan2f(playerToMouseHeading.y, playerToMouseHeading.x);
+	if (moveDirectionFB != 0) {
+		player->position.x += cos(player->heading) * moveDirectionFB * PLAYER_MOVE_SPEED * dT;
+		player->position.y += sin(player->heading) * moveDirectionFB * PLAYER_MOVE_SPEED * dT;
+	}
+	if (moveDirectionLR != 0) {
+		player->position.x += cos(player->heading + M_PI_2) * moveDirectionLR * PLAYER_MOVE_SPEED * dT;
+		player->position.y += sin(player->heading + M_PI_2) * moveDirectionLR * PLAYER_MOVE_SPEED * dT;
+	}
 }
