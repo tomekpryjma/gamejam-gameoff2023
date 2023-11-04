@@ -13,5 +13,5 @@
 //====================
 // Player specific
 //====================
-#define PLAYER_MOVE_SPEED 30
+#define PLAYER_MOVE_SPEED 10
 #define PLAYER_LOOK_SPEED 400
